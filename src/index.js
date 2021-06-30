@@ -84,7 +84,11 @@ const emptyTempFolder = () => {
   
       try {
         logger.success(`Message received`, logger.color.green)
-  
+        
+        logger.info(`Emptying temp folder`)
+        await emptyTempFolder()
+        logger.success(`Temp folder emptied`, logger.color.green)
+        
         const job = JSON.parse(msg.content)
         console.log(job)
   
@@ -99,10 +103,6 @@ const emptyTempFolder = () => {
         logger.info(`Ack'ing inbound message`)
         await channel.ack(msg)
         logger.success(`Ack'ed`, logger.color.green)
-
-        logger.info(`Emptying temp folder`)
-        await emptyTempFolder()
-        logger.success(`Temp folder emptied`)
         
         logger.info(`Publishing ${job.title}`)
         await channel.publish(

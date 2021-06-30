@@ -30,8 +30,8 @@ const uploadFile = job => {
     const command = [
       `bin/rclone`,
       `copy`,
-      `temp/${title}`,
-      `${dest}:Airing/${show}`,
+      `"temp/${title}"`,
+      `"${dest}:Airing/${show}"`,
       `--config config/rclone.conf`
     ]
     const subprocess = exec(command.join(' '), { cwd: process.cwd() })
@@ -117,6 +117,10 @@ const emptyTempFolder = () => {
         logger.info(`Nack'ing inbound message`)
         await channel.nack(msg, false, false)
         logger.success(`Nack'ed`, logger.color.green)
+
+        logger.info(`Emptying temp folder`)
+        await emptyTempFolder()
+        logger.success(`Temp folder emptied`)
       }
     })  
   }

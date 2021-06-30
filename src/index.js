@@ -111,6 +111,7 @@ const emptyTempFolder = () => {
           Buffer.from(JSON.stringify(job)),
           { persistent: true }
         )
+        logger.success(`Published`, logger.color.green)
       }
       catch (e) {
         logger.error(e)  

@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "@iarna/toml": "^2.2.5",
+    "amqplib": "^0.8.0",
+    "ini": "^2.0.0",
+    "logger": "github:wizo06/logger"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "workspaces": [
+    "bin",
+    "config"
+  ]
+}

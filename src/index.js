@@ -90,6 +90,10 @@ const emptyTempFolder = () => {
         logger.success(`Temp folder emptied`, logger.color.green)
         
         const job = JSON.parse(msg.content)
+        if (job.title === '' || job.title === undefined) {
+          const magnetLink = new URL(job.link)
+          job.title = magnetLink.searchParams.get('dn')
+        }
         console.log(job)
   
         logger.info(`Downloading...`)

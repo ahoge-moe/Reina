@@ -54,25 +54,25 @@ const emptyTempFolder = () => {
     logger.info(`Connecting to RabbitMQ`)
     const connection = await amqp.connect(inbound)
     const channel = await connection.createChannel()
-    logger.success(`Connection to RabbitMQ established`, logger.color.green)
+    logger.success(`Connection to RabbitMQ established`)
 
     await channel.prefetch(1)
     
     logger.info(`Checking inbound queue`)
     await channel.checkQueue(inbound.queue)
-    logger.success(`Inbound queue confirmed`, logger.color.green)
+    logger.success(`Inbound queue confirmed`)
 
     logger.info(`Asserting outbout exchange`)
     await channel.assertExchange(outbound.exchange, 'direct')
-    logger.success(`Outbout exchange asserted`, logger.color.green)
+    logger.success(`Outbout exchange asserted`)
 
     logger.info(`Asserting outbound queue`)
     await channel.assertQueue(outbound.queue)
-    logger.success(`Outbound queue asserted`, logger.color.green)
+    logger.success(`Outbound queue asserted`)
 
     logger.info(`Binding outbound exchange to outbound queue`)
     await channel.bindQueue(outbound.queue, outbound.exchange, outbound.routingKey)
-    logger.success(`Binding established`, logger.color.green)
+    logger.success(`Binding established`)
   
     logger.info(`Awaiting for messages`)
     await channel.consume(inbound.queue, async msg => {
@@ -83,11 +83,11 @@ const emptyTempFolder = () => {
       }
   
       try {
-        logger.success(`Message received`, logger.color.green)
+        logger.success(`Message received`)
         
         logger.info(`Emptying temp folder`)
         await emptyTempFolder()
-        logger.success(`Temp folder emptied`, logger.color.green)
+        logger.success(`Temp folder emptied`)
         
         const job = JSON.parse(msg.content)
         if (job.title === '' || job.title === undefined) {
@@ -98,15 +98,15 @@ const emptyTempFolder = () => {
   
         logger.info(`Downloading...`)
         await downloadFile(job)
-        logger.success(`Downloaded`, logger.color.green)
+        logger.success(`Downloaded`)
   
         logger.info(`Uploading...`)
         await uploadFile(job)
-        logger.success(`Uploaded`, logger.color.green)
+        logger.success(`Uploaded`)
   
         logger.info(`Ack'ing inbound message`)
         await channel.ack(msg)
-        logger.success(`Ack'ed`, logger.color.green)
+        logger.success(`Ack'ed`)
         
         logger.info(`Publishing ${job.title}`)
         await channel.publish(
@@ -115,14 +115,14 @@ const emptyTempFolder = () => {
           Buffer.from(JSON.stringify(job)),
           { persistent: true }
         )
-        logger.success(`Published`, logger.color.green)
+        logger.success(`Published`)
       }
       catch (e) {
         logger.error(e)  
 
         logger.info(`Nack'ing inbound message`)
         await channel.nack(msg, false, true)
-        logger.success(`Nack'ed`, logger.color.green)
+        logger.success(`Nack'ed`)
       }
     })  
   }

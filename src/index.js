@@ -55,7 +55,7 @@ const emptyTempFolder = () => {
     const connection = await amqp.connect(inbound)
     const channel = await connection.createChannel()
     logger.success(`Connection to RabbitMQ established`, logger.color.green)
-    
+
     await channel.prefetch(1)
     
     logger.info(`Checking inbound queue`)
@@ -115,13 +115,10 @@ const emptyTempFolder = () => {
       }
       catch (e) {
         logger.error(e)  
-        logger.info(`Nack'ing inbound message`)
-        await channel.nack(msg, false, false)
-        logger.success(`Nack'ed`, logger.color.green)
 
-        logger.info(`Emptying temp folder`)
-        await emptyTempFolder()
-        logger.success(`Temp folder emptied`)
+        logger.info(`Nack'ing inbound message`)
+        await channel.nack(msg, false, true)
+        logger.success(`Nack'ed`, logger.color.green)
       }
     })  
   }

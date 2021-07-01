@@ -1,5 +1,5 @@
 node_modules/
 temp/
 bin/rclone
-config.toml
-rclone.conf
+config/
+!config/*template*

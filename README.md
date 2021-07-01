@@ -5,11 +5,8 @@
 
 ## Getting Started
 ```
-chmod +x prepare.sh
 ./prepare.sh
 bin/rclone config --config config/rclone.conf
-cp config/template.toml config/config.toml
-nano config/config.toml
-npm i
+cp config/config-template.toml config/config.toml
 npm start
 ```

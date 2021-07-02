@@ -85,28 +85,28 @@ const emptyTempFolder = () => {
       try {
         logger.success(`Message received`)
         
-        logger.info(`Emptying temp folder`)
-        await emptyTempFolder()
-        logger.success(`Temp folder emptied`)
-        
         const job = JSON.parse(msg.content)
         if (job.title === '' || job.title === undefined) {
           const magnetLink = new URL(job.link)
           job.title = magnetLink.searchParams.get('dn')
         }
         console.log(job)
-  
+        
         logger.info(`Downloading...`)
         await downloadFile(job)
         logger.success(`Downloaded`)
-  
+        
         logger.info(`Uploading...`)
         await uploadFile(job)
         logger.success(`Uploaded`)
-  
+        
         logger.info(`Ack'ing inbound message`)
         await channel.ack(msg)
         logger.success(`Ack'ed`)
+        
+        logger.info(`Emptying temp folder`)
+        await emptyTempFolder()
+        logger.success(`Temp folder emptied`)
         
         logger.info(`Publishing ${job.title}`)
         await channel.publish(

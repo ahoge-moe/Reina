@@ -56,7 +56,7 @@ const parseMessage = content => {
     const extractedFileName = magnetLink.searchParams.get('dn')
 
     const extractedShowNameAndEpisode = extractedFileName.replace(/^\[SubsPlease\] | \([0-9]+p\) \[[0-9A-Z]+\]\.mkv$/g, '')
-    const resolution = extractedFileName.match(/\([0-9]+p\)/)[0].replace(/\(|\)/g, '')
+    const resolution = extractedFileName.match(/\([0-9]+p\)/)[0].replace(/\(|\)|p/g, '')
     const normalizedShowName = extractedShowNameAndEpisode.replace(/[0-9]+$/, resolution)
 
     return {

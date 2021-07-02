@@ -17,6 +17,10 @@ const downloadFile = job => {
     ]
     const subprocess = exec(command.join(' '), { cwd: process.cwd() })
     subprocess.on('close', code => {
+      if (code === 13) {
+        logger.debug(`Exit code ${code}`)
+        resolve()
+      }
       if (code != 0) return reject()
       resolve()
     })

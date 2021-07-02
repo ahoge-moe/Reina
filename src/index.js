@@ -49,6 +49,26 @@ const emptyTempFolder = () => {
   })
 }
 
+const parseMessage = content => {
+  // Message is the magnet link itself
+  if (content.toString().startsWith('magnet')) {
+    const magnetLink = new URL(content)
+    const extractedFileName = magnetLink.searchParams.get('dn')
+
+    const extractedShowNameAndEpisode = extractedFileName.replace(/^\[SubsPlease\] | \([0-9]+p\) \[[0-9A-Z]+\]\.mkv$/g, '')
+    const resolution = extractedFileName.match(/\([0-9]+p\)/)[0].replace(/\(|\)/g, '')
+    const normalizedShowName = extractedShowNameAndEpisode.replace(/[0-9]+$/, resolution)
+
+    return {
+      title: extractedFileName,
+      link: content,
+      show: normalizedShowName
+    }
+  }
+
+  return JSON.parse(content)
+}
+
 ;(async () => {
   try {
     logger.info(`Connecting to RabbitMQ`)
@@ -84,12 +104,8 @@ const emptyTempFolder = () => {
   
       try {
         logger.success(`Message received`)
-        
-        const job = JSON.parse(msg.content)
-        if (job.title === '' || job.title === undefined) {
-          const magnetLink = new URL(job.link)
-          job.title = magnetLink.searchParams.get('dn')
-        }
+
+        const job = parseMessage(msg.content)
         console.log(job)
         
         logger.info(`Downloading...`)

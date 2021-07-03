@@ -56,12 +56,12 @@ const emptyTempFolder = () => {
 const parseMessage = content => {
   // Message is the magnet link itself
   if (content.toString().startsWith('magnet')) {
-    const magnetLink = new URL(content)
+    const magnetLink = new URL(content.toString())
     const extractedFileName = magnetLink.searchParams.get('dn')
 
     const extractedShowNameAndEpisode = extractedFileName.replace(/^\[SubsPlease\] | \([0-9]+p\) \[[0-9A-Z]+\]\.mkv$/g, '')
     const resolution = extractedFileName.match(/\([0-9]+p\)/)[0].replace(/\(|\)|p/g, '')
-    const normalizedShowName = extractedShowNameAndEpisode.replace(/[0-9]+$/, resolution)
+    const normalizedShowName = extractedShowNameAndEpisode.replace(/-.+$/, `- ${resolution}`)
 
     return {
       title: extractedFileName,

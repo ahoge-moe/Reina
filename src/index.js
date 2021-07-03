@@ -65,7 +65,7 @@ const parseMessage = content => {
 
     return {
       title: extractedFileName,
-      link: content,
+      link: content.toString(),
       show: normalizedShowName
     }
   }

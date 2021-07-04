@@ -66,7 +66,7 @@ const parseMessage = content => {
     const episodeRegex = /- [0-9]+((v|\.)[0-9]+)*$/
     // if episode number is present, then replace episode number with resolution
     // if episode number is missing, then concat show name with resolution
-    const normalizedShowName = showAndEp.match(episodeRegex) ? showAndEp.replace(episodeRegex, `- ${resolution}`) : normalizedShowName = `${showAndEp} - ${resolution}`
+    const normalizedShowName = showAndEp.match(episodeRegex) ? showAndEp.replace(episodeRegex, `- ${resolution}`) : `${showAndEp} - ${resolution}`
 
     return {
       title: filename,

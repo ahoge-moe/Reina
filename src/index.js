@@ -57,14 +57,17 @@ const parseMessage = content => {
   // Message is the magnet link itself
   if (content.toString().startsWith('magnet')) {
     const magnetLink = new URL(content.toString())
-    const extractedFileName = magnetLink.searchParams.get('dn')
+    const filename = magnetLink.searchParams.get('dn')
 
-    const extractedShowNameAndEpisode = extractedFileName.replace(/^\[SubsPlease\] | \([0-9]+p\) \[[0-9A-Z]+\]\.mkv$/g, '')
-    const resolution = extractedFileName.match(/\([0-9]+p\)/)[0].replace(/\(|\)|p/g, '')
-    const normalizedShowName = extractedShowNameAndEpisode.replace(/- [0-9]+((v|\.)[0-9]+)*$/, `- ${resolution}`)
+    const showAndEp = filename.replace(/^\[SubsPlease\] | \([0-9]+p\) \[[0-9A-Z]+\]\.mkv$/g, '')
+    const resolution = filename.match(/\([0-9]+p\)/)?.[0].replace(/\(|\)|p/g, '')
+    const episodeRegex = /- [0-9]+((v|\.)[0-9]+)*$/
+    // if episode number is present, then replace episode number with resolution
+    // if episode number is missing, then concat show name with resolution
+    const normalizedShowName = showAndEp.match(episodeRegex) ? showAndEp.replace(episodeRegex, `- ${resolution}`) : normalizedShowName = `${showAndEp} - ${resolution}`
 
     return {
-      title: extractedFileName,
+      title: filename,
       link: content.toString(),
       show: normalizedShowName
     }

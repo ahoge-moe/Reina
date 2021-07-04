@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir -p bin
 cd bin
 
 if [ -f rclone ]; then

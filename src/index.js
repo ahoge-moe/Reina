@@ -18,7 +18,9 @@ const downloadFile = job => {
     const subprocess = exec(command.join(' '), { cwd: process.cwd() })
     subprocess.on('close', code => {
       if (code === 13) {
-        logger.debug(`Exit code ${code}`)
+        // If file already existed. This can happen when channel to RabbitMQ is closed because of ack timeout.
+        // The next time Reina is boot up, aria2c might try to download the same file again even though it's already completed.
+        logger.debug(`Exit code ${code}`) 
         resolve()
       }
       if (code != 0) return reject()
@@ -35,7 +37,7 @@ const uploadFile = job => {
       `bin/rclone`,
       `copy`,
       `"temp/${title}"`,
-      `"${dest}:Airing/${show}"`,
+      `"${dest}:放送中/${show}"`,
       `--config config/rclone.conf`
     ]
     const subprocess = exec(command.join(' '), { cwd: process.cwd() })

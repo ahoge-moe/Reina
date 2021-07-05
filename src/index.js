@@ -29,6 +29,24 @@ const downloadFile = job => {
   })
 }
 
+const mkdir = job => {
+  return new Promise((resolve, reject) => {
+    const { title, link, show } = job
+
+    const command = [
+      `bin/rclone`,
+      `mkdir`,
+      `"${dest}:放送中/${show}"`,
+      `--config config/rclone.conf`
+    ]
+    const subprocess = exec(command.join(' '), { cwd: process.cwd() })
+    subprocess.on('close', code => {
+      if (code != 0) return reject()
+      resolve()
+    })
+  })
+}
+
 const uploadFile = job => {
   return new Promise((resolve, reject) => {
     const { title, link, show } = job
@@ -121,6 +139,10 @@ const parseMessage = content => {
         await downloadFile(job)
         logger.success(`Downloaded`)
         
+        logger.info(`Creating folder...`)
+        await mkdir(job)
+        logger.success(`Created`)
+
         logger.info(`Uploading...`)
         await uploadFile(job)
         logger.success(`Uploaded`)

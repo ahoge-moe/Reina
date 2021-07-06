@@ -80,20 +80,18 @@ const parseMessage = content => {
     const filename = magnetLink.searchParams.get('dn')
 
     const showAndEp = filename.replace(/^\[SubsPlease\] | \([0-9]+p\) \[[0-9A-Z]+\]\.mkv$/g, '')
-    const resolution = filename.match(/\([0-9]+p\)/)?.[0].replace(/\(|\)|p/g, '')
-    const episodeRegex = /- [0-9]+((v|\.)[0-9]+)*$/
-    // if episode number is present, then replace episode number with resolution
-    // if episode number is missing, then concat show name with resolution
-    const normalizedShowName = showAndEp.match(episodeRegex) ? showAndEp.replace(episodeRegex, `- ${resolution}`) : `${showAndEp} - ${resolution}`
+    const showName = showAndEp.replace(/ - [0-9]+((v|\.)[0-9]+)*$| - OVA[0-9]*$/, ``)
 
     return {
       title: filename,
       link: content.toString(),
-      show: normalizedShowName
+      show: showName
     }
   }
 
-  return JSON.parse(content)
+  const job = JSON.parse(content)
+  job.show = job.show.replace(/ - [0-9]+$/, '')
+  return job
 }
 
 ;(async () => {
